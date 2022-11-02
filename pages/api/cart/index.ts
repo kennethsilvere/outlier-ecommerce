@@ -1,8 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import prismaClient from "../../src/database"
+import { NextApiRequest, NextApiResponse } from 'next'
+import prismaClient from '../../../src/database'
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     const cartItems = await prismaClient.shoppingCart.findMany({
       select: {
         product: true,

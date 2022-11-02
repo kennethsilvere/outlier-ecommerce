@@ -1,0 +1,12 @@
+.orderList {
+  list-style: none;
+  padding: none;
+}
+
+.orderContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
