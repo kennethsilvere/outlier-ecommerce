@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState, FC } from 'react'
 
 import { Prisma } from '@prisma/client'
 
@@ -24,17 +24,22 @@ type ProductItemProps = {
   }
 }
 
-const ProductItem: React.FC<ProductItemProps> = (props): ReactElement => {
+const ProductItem: FC<ProductItemProps> = (props): ReactElement => {
   const cartCtx = useContext(CartContext)
   const [isLoading, setIsLoading] = useState(false)
 
-  const addItemToCart = async () => {
-    setIsLoading(true)
+  const addItemsInCartContext = async () => {
     await cartCtx?.addItemToCart({
       id: props.data.id,
       name: props.data.name,
       price: props.data.price as number
     })
+    return
+  }
+
+  const addItemToCart = () => {
+    setIsLoading(true)
+    addItemsInCartContext()
     setIsLoading(false)
   }
 

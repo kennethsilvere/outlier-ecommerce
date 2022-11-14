@@ -11,7 +11,7 @@ interface HomeProps {
   products: Product[] | string
 }
 
-const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
+const Home: NextPage<HomeProps> = ({ products }) => {
   const productsArray = JSON.parse(products as string)
 
   return (

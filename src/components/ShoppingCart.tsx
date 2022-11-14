@@ -1,10 +1,17 @@
-import { ReactElement, useContext, useState } from 'react'
+import { ReactElement, useContext, useState, FC } from 'react'
 import { useRouter } from 'next/router'
 import { CartContext } from '../../store/cart-context'
-import { Box, Button, List, ListItemText, ListItem, CircularProgress } from '@mui/material'
+import {
+  Box,
+  Button,
+  List,
+  ListItemText,
+  ListItem,
+  CircularProgress
+} from '@mui/material'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 
-const ShoppingCart: React.FC = (props): ReactElement => {
+const ShoppingCart: FC = (): ReactElement => {
   const [isLoading, setIsLoading] = useState(false)
   const cartCtx = useContext(CartContext)
   const router = useRouter()
@@ -18,15 +25,17 @@ const ShoppingCart: React.FC = (props): ReactElement => {
 
   const checkoutCart = async () => {
     setIsLoading(true)
-    const orderId = await cartCtx?.saveOrder()
-    setIsLoading(false)
-    router.push(`/checkout/${orderId}`)
+    cartCtx?.saveOrder().then((orderId) => {
+      setIsLoading(false)
+      router.push(`/checkout/${orderId}`)
+    })
   }
 
-  const removeItemFromCart = async (product_id: number) => {
+  const removeItemFromCart = async (productId: number) => {
     setIsLoading(true)
-    await cartCtx!.removeItemFromCart(product_id)
-    setIsLoading(false)
+    cartCtx!.removeItemFromCart(productId).then(() => {
+      setIsLoading(false)
+    })
   }
 
   return (

@@ -11,9 +11,9 @@ type ItemToAdd = { id: number; name: string; price: number }
 
 interface CartContextInterface {
   cartItems: ShoppingCartItem[]
-  removeItemFromCart: (productId: number) => void
+  removeItemFromCart: (productId: number) => Promise<boolean>
   addItemToCart: (product: ItemToAdd) => void
-  saveOrder: () => void
+  saveOrder: () => Promise<null | number>
   getCalculatedTaxOnCartItems: () => number
   getCartSubTotal: () => number
   getCartTotal: () => number
@@ -48,7 +48,9 @@ export const CartContextProvider: React.FC<CartContextProviderProps> = (
     getCartItems()
   }, [])
 
-  const removeCartItemHandler = async (productId: number) => {
+  const removeCartItemHandler: (productId: number) => Promise<boolean> = async (
+    productId: number
+  ) => {
     return new Promise(async (resolve, reject) => {
       const response = await fetch(`/api/cart/remove?product=${productId}`, {
         method: 'POST',
@@ -119,7 +121,7 @@ export const CartContextProvider: React.FC<CartContextProviderProps> = (
     })
   }
 
-  const saveOrder = async () => {
+  const saveOrder: () => Promise<null | number> = async () => {
     return new Promise(async (resolve, reject) => {
       const orderSummary = {
         subTotal: getCartSubTotal(),
@@ -165,11 +167,11 @@ export const CartContextProvider: React.FC<CartContextProviderProps> = (
 
   const getCalculatedTaxOnCartItems = () => {
     const taxPercentage = 7 / 100
-    return +(+getCartSubTotal() * taxPercentage).toFixed(2)
+    return +(getCartSubTotal() * taxPercentage).toFixed(2)
   }
 
   const getCartTotal = () => {
-    return +(+getCartSubTotal() + +getCalculatedTaxOnCartItems()).toFixed(2)
+    return +(getCartSubTotal() + getCalculatedTaxOnCartItems()).toFixed(2)
   }
 
   const context: CartContextInterface = {
